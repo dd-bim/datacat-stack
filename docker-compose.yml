@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  db:
+    image: neo4j:4.1
+    restart: always
+    ports:
+    - 7687:7687
+    environment:
+    - NEO4J_AUTH=${NEO4J_AUTH}
+    - NEO4JLABS_PLUGINS=["apoc"]
+    volumes:
+    - ${PWD}/data:/data:Z
+    - ${PWD}/logs:/logs:Z
+  api:
+    build: api/
+    depends_on:
+      - db
+    restart: always
+    volumes:
+    - ${PWD}/application.yml:/application/application.yml:ro
+    environment:
+      - spring.data.neo4j.uri=bolt://db:7687
+      - spring.data.neo4j.username=${NEO4J_USERNAME}
+      - spring.data.neo4j.password=${NEO4J_PASSWORD}
+  explorer:
+    image: datacat-explorer:latest
+    restart: always
+  proxy:
+    build:
+      context: proxy/
+    depends_on:
+      - db
+      - api
+      - explorer
+    ports:
+      - ${PORT:-3000}:80

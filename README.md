@@ -19,7 +19,9 @@ $ cd datacat
 $ docker-compose up
 
 # Updating the stack if new container images become available
+$ git pull origin master
 $ docker-compose pull
+$ docker-compose up --build
 
 # Deleting/resetting the stack
 $ docker-compose down

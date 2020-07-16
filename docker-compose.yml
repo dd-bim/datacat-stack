@@ -13,25 +13,36 @@ services:
     - ${PWD}/data:/data:Z
     - ${PWD}/logs:/logs:Z
   api:
-    build: api/
+    build:
+      context: api/
+      args:
+        VERSION: ${DATACAT_VERSION}
     depends_on:
       - db
     restart: always
-    volumes:
-    - ${PWD}/application.yml:/application/application.yml:ro
     environment:
       - spring.data.neo4j.uri=bolt://db:7687
       - spring.data.neo4j.username=${NEO4J_USERNAME}
       - spring.data.neo4j.password=${NEO4J_PASSWORD}
   explorer:
-    image: datacat-explorer:latest
+    image: bentrm/datacat:${DATACAT_EXPLORER_VERSION:-latest-explorer}
     restart: always
-  proxy:
-    build:
-      context: proxy/
+  prometheus:
+    image: prom/prometheus:latest
     depends_on:
-      - db
+      - api
+    volumes:
+      - ${PWD}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - metrics:/prometheus
+    ports:
+      - ${PORT_METRICS:-9090}:9090
+  proxy:
+    build: proxy/
+    depends_on:
       - api
       - explorer
     ports:
       - ${PORT:-3000}:80
+
+volumes:
+  metrics:

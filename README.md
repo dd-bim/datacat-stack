@@ -18,6 +18,9 @@ $ cd datacat
 # Run the docker-compose stack
 $ docker-compose up
 
+# Optionally, to run the stack with additional metrics components in production
+$ docker-compose -f docker-compose.yml -f docker-compose.addons.yml up
+
 # Updating the stack if new container images become available
 $ git pull origin master
 $ docker-compose pull
@@ -38,6 +41,6 @@ The application will be available after all component containers have been downl
 and initialized on http://localhost:3000.
 
 The default admin user account created during startup has the credentials `admin:s3cret`.
-The is now email provider configured in this setup. Signup requests will be logged to the 
+There is no email provider configured in this setup. Signup requests will be logged to the 
 terminal.
 

@@ -24,15 +24,15 @@ services:
       - spring.data.neo4j.uri=bolt://db:7687
       - spring.data.neo4j.username=${NEO4J_USERNAME}
       - spring.data.neo4j.password=${NEO4J_PASSWORD}
-  explorer:
-    image: bentrm/datacat:${DATACAT_EXPLORER_VERSION:-latest-explorer}
+  web:
+    build:
+      context: "./services/proxy/"
+      args:
+        VERSION: ${DATACAT_EXPLORER_VERSION}
+        TITLE: ${DATACAT_EXPLORER_TITLE}
+        MAIL: ${DATACAT_EXPLORER_MAIL}
     depends_on:
       - api
     restart: always
-  proxy:
-    build: "./services/proxy/"
-    depends_on:
-      - api
-      - explorer
     ports:
       - ${PORT:-3000}:80

@@ -3,11 +3,11 @@ version: '3.7'
 services:
   db:
     image: neo4j:4.1
-    restart: always
+    restart: unless-stopped
     ports:
-    - 7687:7687
+    - ${NEO4J_PORT:-7687}:7687
     environment:
-    - NEO4J_AUTH=${NEO4J_AUTH}
+    - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
     - NEO4JLABS_PLUGINS=["apoc"]
     volumes:
     - "./data:/data:Z"
@@ -19,20 +19,19 @@ services:
         VERSION: ${DATACAT_VERSION}
     depends_on:
       - db
-    restart: always
+    restart: unless-stopped
     environment:
+      - SPRING_APPLICATION_JSON=${DATACAT_APPLICATION_JSON}
       - spring.data.neo4j.uri=bolt://db:7687
-      - spring.data.neo4j.username=${NEO4J_USERNAME}
+      - spring.data.neo4j.username=${NEO4J_USER}
       - spring.data.neo4j.password=${NEO4J_PASSWORD}
   web:
     build:
       context: "./services/proxy/"
       args:
-        VERSION: ${DATACAT_EXPLORER_VERSION}
-        TITLE: ${DATACAT_EXPLORER_TITLE}
-        MAIL: ${DATACAT_EXPLORER_MAIL}
+        VERSION: ${DATACAT_EDITOR_VERSION}
     depends_on:
       - api
-    restart: always
+    restart: unless-stopped
     ports:
-      - ${PORT:-3000}:80
+      - ${DATACAT_PORT:-3000}:80

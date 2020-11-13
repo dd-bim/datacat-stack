@@ -1,17 +1,17 @@
-version: '3.7'
+version: "3.7"
 
 services:
   db:
     image: neo4j:4.1
     restart: unless-stopped
     ports:
-    - ${NEO4J_PORT:-7687}:7687
+      - ${NEO4J_PORT:-7687}:7687
     environment:
-    - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
-    - NEO4JLABS_PLUGINS=["apoc"]
+      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
+      - NEO4JLABS_PLUGINS=["apoc"]
     volumes:
-    - "./data:/data:Z"
-    - "./logs:/logs:Z"
+      - "./data:/data:Z"
+      - "./logs:/logs:Z"
   api:
     build:
       context: "./services/api/"

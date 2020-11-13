@@ -1,0 +1,23 @@
+version: "3.7"
+
+# Use to override service configuration for local development.
+
+# To run only db and mail service:
+# $ docker-compose up db mail -d
+
+services:
+  db:
+    restart: "no"
+    ports:
+      - "7474:7474"
+  mail:
+    restart: "no"
+    image: bentrm/mailslurper:1.14.1
+    ports:
+      - "2500:2500"
+      - "9090:8080"
+    volumes:
+      - "mail:/data"
+
+volumes:
+  mail:

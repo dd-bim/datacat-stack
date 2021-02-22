@@ -1,23 +1,36 @@
 version: "3.7"
 
-# Use to override service configuration for local development.
-
-# To run only db and mail service:
-# $ docker-compose up db mail -d
+# Use to override service configuration for local development or specific production env.
 
 services:
+
+# Exposes the web interface at port 7474
   db:
-    restart: "no"
     ports:
       - "7474:7474"
+
+## Used to override Spring Boot settings
+#  api:
+#    environment:
+#      - spring.mail.username=postmaster@my.domain
+#      - spring.mail.password=mypassword
+#      - spring.mail.properties.mail.smtp.auth=true
+#      - spring.mail.properties.mail.smtp.connectiontimeout=5000
+#      - spring.mail.properties.mail.smtp.timeout=5000
+#      - spring.mail.properties.mail.smtp.writetimeout=5000
+#      - spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Should only be used for development and testing
   mail:
-    restart: "no"
     image: bentrm/mailslurper:1.14.1
     ports:
       - "2500:2500"
-      - "9090:8080"
+      - "9080:9080"
+      - "9085:9085"
     volumes:
+      - "./mailslurper-config.json:/config.json:ro"
       - "mail:/data"
 
+# Must be uncommented to use the given mail container
 volumes:
   mail:

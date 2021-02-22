@@ -1,38 +1,49 @@
 version: "3.7"
 
 services:
+
   db:
     image: neo4j:4.1
     restart: unless-stopped
-    ports:
-      - ${NEO4J_PORT:-7687}:7687
     environment:
-      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
       - NEO4JLABS_PLUGINS=["apoc"]
     volumes:
-      - "./data:/data:Z"
-      - "./logs:/logs:Z"
+      - "dbdata:/data"
+      - "dblogs:/logs"
+
   api:
-    build:
-      context: "./services/api/"
-      args:
-        VERSION: ${DATACAT_VERSION}
-    depends_on:
-      - db
+    image: bentrm/datacat:${DATACAT_VERSION}
     restart: unless-stopped
     environment:
-      - SPRING_APPLICATION_JSON=${DATACAT_APPLICATION_JSON}
-      - spring.data.neo4j.uri=bolt://db:7687
-      - spring.data.neo4j.username=${NEO4J_USER}
+      - logging.level.de.bentrm=INFO
+      - datacat.explorer.url=${DATACAT_EDITOR_URL}
+      - datacat.auth.secret=${DATACAT_SECRET}
+      - datacat.auth.issuer=${DATACAT_ISSUER}
+      - datacat.users.admin.password=${DATACAT_ADMIN_PASSWORD}
+      - spring.mail.port=${MAIL_PORT}
+      - spring.mail.host=${MAIL_HOST}
+      - spring.data.neo4j.username=neo4j
       - spring.data.neo4j.password=${NEO4J_PASSWORD}
+      - spring.data.neo4j.uri=bolt://db:7687
+    depends_on:
+      - db
+    command: [
+        "wait-for-it", "db:7687", "--timeout=300", "--",
+        "wait-for-it", "${MAIL_HOST}:${MAIL_PORT}", "--timeout=30", "--",
+        "java", "--enable-preview", "org.springframework.boot.loader.JarLauncher" ]
 
   web:
     build:
       context: "./services/proxy/"
       args:
         VERSION: ${DATACAT_EDITOR_VERSION}
+    restart: unless-stopped
     depends_on:
       - api
-    restart: unless-stopped
     ports:
       - ${DATACAT_PORT:-3000}:80
+
+volumes:
+  dbdata:
+  dblogs:

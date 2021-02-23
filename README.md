@@ -92,3 +92,13 @@ $ docker-compose pull
 # Build and (re-)start the application stack 
 $ docker-compose up --build -d
 ````
+
+# Debugging
+
+For debugging purposes, it might be useful to access the database directly.
+This is possible from the host system by executing the cypher-shell of the database
+container directly:
+
+````bash
+$ docker-compose exec db cypher-shell
+````

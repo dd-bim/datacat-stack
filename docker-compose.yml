@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
     environment:
       - logging.level.de.bentrm=INFO
-      - datacat.explorer.url=${DATACAT_EDITOR_URL}
+      - datacat.client.url=${DATACAT_EDITOR_URL}
       - datacat.auth.secret=${DATACAT_SECRET}
       - datacat.auth.issuer=${DATACAT_ISSUER}
       - datacat.users.admin.password=${DATACAT_ADMIN_PASSWORD}

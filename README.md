@@ -1,7 +1,7 @@
 # datacat application stack
 
 This repository combines all components to execute the datacat API and editor client application.
-To make use of this project, Docker must be installed. Also, the `docker-compose` executable must be available.
+To make use of this project, Docker must be installed. Also, the `docker compose` executable must be available.
 
 Docker install documentation: https://docs.docker.com/desktop/
 
@@ -21,9 +21,8 @@ $ git clone https://github.com/dd-bim/datacat-stack.git
 Move into the new directory, create a copy of the given example configuration file
 `env.example.txt` as `.env` and edit the settings according to your needs.
 
-Mind that the example uses the `latest` version of datacat and datacat editor. To
-make sure your installation is reproducible in production, you should define an explicit version
-as available at [Docker Hub](https://hub.docker.com/repository/docker/bentrm/datacat).
+To make sure your installation is reproducible in production, you should define an explicit version
+as available at [Docker Hub](https://hub.docker.com/repository/docker/schi11er/datacat).
 
 ````bash
 $ cd datacat-stack
@@ -45,7 +44,7 @@ should be overriden by editing `docker-compose.override.yml`.**
 To pull the current container images according to your configuration run:
 
 ````bash
-$ docker-compose pull
+$ docker compose pull
 ````
 
 ### Build client / proxy container
@@ -53,7 +52,7 @@ $ docker-compose pull
 To build the client / proxy image of the application stack run:
 
 ````
-$ docker-compose build
+$ docker compose build
 ````
 
 ### Run stack
@@ -61,17 +60,17 @@ $ docker-compose build
 To start the application stack run in the project directory:
 
 ````
-$ docker-compose up -d
+$ docker compose up -d
 ````
 
-Access the logs by running `docker-compose logs`.
+Access the logs by running `docker compose logs`.
 
 ### Stop stack
 
 To stop the application stack, run:
 
 ````bash
-$ docker-compose down
+$ docker compose down
 ````
 
 The current state is persisted in the linked docker volumes. Check the datacat projects' readme
@@ -87,10 +86,10 @@ $ git pull origin master
 $ nano .env
 
 # Pull new versions of the container images
-$ docker-compose pull
+$ docker compose pull
 
 # Build and (re-)start the application stack 
-$ docker-compose up --build -d
+$ docker compose up --build -d
 ````
 
 # Debugging
@@ -100,5 +99,5 @@ This is possible from the host system by executing the cypher-shell of the datab
 container directly:
 
 ````bash
-$ docker-compose exec db cypher-shell
+$ docker compose exec db cypher-shell
 ````

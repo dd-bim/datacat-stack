@@ -15,7 +15,7 @@ services:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
 
   api:
-    image: bentrm/datacat:${DATACAT_VERSION}
+    image: schi11er/datacat:${DATACAT_VERSION}
     restart: unless-stopped
     environment:
       - logging.level.de.bentrm=INFO

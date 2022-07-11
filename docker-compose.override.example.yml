@@ -12,6 +12,7 @@ services:
 ## Used to override Spring Boot settings
 #  api:
 #    environment:
+#      - datacat.mail.from=postmaster@my.domain
 #      - spring.mail.username=postmaster@my.domain
 #      - spring.mail.password=mypassword
 #      - spring.mail.properties.mail.smtp.auth=true

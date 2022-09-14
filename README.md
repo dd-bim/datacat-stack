@@ -101,3 +101,8 @@ container directly:
 ````bash
 $ docker compose exec db cypher-shell
 ````
+
+
+### Infrastructure model
+
+![Infrastructure model](.infragenie/infrastructure_model.png)

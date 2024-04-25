@@ -1,6 +1,6 @@
 ARG VERSION=latest
 
-FROM bentrm/datacat-editor:${VERSION} AS build
+FROM schi11er/datacat-editor:${VERSION} AS build
 RUN npm run-script build
 
 FROM nginx:stable-alpine

@@ -9,6 +9,8 @@ The datacat editor application is build as part of this configuration into a sta
 functions as the applications' frontend proxy as well. Check the build directory `./services` how this is handled.
 By default, the administration interface of the bundled Neo4j database is not exposed / proxied. 
 
+[More information about datacat](https://github.com/dd-bim/datacat/wiki)
+
 ## Installation
 
 To run the application stack, clone this repository into a writable location.

@@ -1,13 +1,11 @@
-version: "3.7"
-
 services:
 
   db:
-    image: neo4j:4.1
+    image: neo4j:5.26.4
     restart: unless-stopped
     environment:
       - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
-      - NEO4JLABS_PLUGINS=["apoc"]
+      - NEO4J_PLUGINS=["apoc"]
     volumes:
       - "dbdata:/data"
       - "dblogs:/logs"
@@ -25,15 +23,15 @@ services:
       - datacat.users.admin.password=${DATACAT_ADMIN_PASSWORD}
       - spring.mail.port=${MAIL_PORT}
       - spring.mail.host=${MAIL_HOST}
-      - spring.data.neo4j.username=neo4j
-      - spring.data.neo4j.password=${NEO4J_PASSWORD}
-      - spring.data.neo4j.uri=bolt://db:7687
+      - spring.neo4j.authentication.username=neo4j
+      - spring.neo4j.authentication.password=${NEO4J_PASSWORD}
+      - spring.neo4j.uri=bolt://db:7687
     depends_on:
       - db
     command: [
         "wait-for-it", "db:7687", "--timeout=300", "--",
         "wait-for-it", "${MAIL_HOST}:${MAIL_PORT}", "--timeout=30", "--",
-        "java", "--enable-preview", "org.springframework.boot.loader.JarLauncher" ]
+        "java", "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher" ]
 
   web:
     build:
@@ -45,6 +43,26 @@ services:
       - api
     ports:
       - ${DATACAT_PORT:-3000}:80
+
+  restapi:
+    image: schi11er/datacatrestapi:${DATACAT_REST_API_VERSION}
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3001:3001"
+    environment:
+      - SERVER_URL=http://api:8080 # for local development
+      # - SERVER_URL=${DATACAT_EDITOR_URL}
+      - BASE_PATH=/graphql
+      - USERNAME=admin
+      - PASSWORD=${DATACAT_ADMIN_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/swagger-ui/index.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 volumes:
   dbdata:

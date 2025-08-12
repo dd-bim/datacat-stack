@@ -52,8 +52,8 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - SERVER_URL=http://api:8080 # for local development
-      # - SERVER_URL=${DATACAT_EDITOR_URL}
+      # - SERVER_URL=http://api:8080 # for local development
+      - SERVER_URL=${DATACAT_EDITOR_URL}
       - BASE_PATH=/graphql
       - USERNAME=admin
       - PASSWORD=${DATACAT_ADMIN_PASSWORD}

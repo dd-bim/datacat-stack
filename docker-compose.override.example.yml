@@ -1,13 +1,11 @@
-version: "3.7"
-
 # Use to override service configuration for local development or specific production env.
 
-services:
+# services:
 
 # Exposes the web interface at port 7474
-  db:
-    ports:
-      - "7474:7474"
+  # db:
+  #   ports:
+  #     - "7474:7474"
 
 ## Used to override Spring Boot settings
 #  api:
@@ -22,16 +20,16 @@ services:
 #      - spring.mail.properties.mail.smtp.starttls.enable=true
 
 # Should only be used for development and testing
-  mail:
-    image: bentrm/mailslurper:1.14.1
-    ports:
-      - "2500:2500"
-      - "9080:9080"
-      - "9085:9085"
-    volumes:
-      - "./mailslurper-config.json:/config.json:ro"
-      - "mail:/data"
+  # mail:
+  #   image: bentrm/mailslurper:1.14.1
+  #   ports:
+  #     - "2500:2500"
+  #     - "9080:9080"
+  #     - "9085:9085"
+  #   volumes:
+  #     - "./mailslurper-config.json:/config.json:ro"
+  #     - "mail:/data"
 
 # Must be uncommented to use the given mail container
-volumes:
-  mail:
+# volumes:
+#   mail:

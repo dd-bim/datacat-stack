@@ -9,6 +9,9 @@ services:
     volumes:
       - "dbdata:/data"
       - "dblogs:/logs"
+    # ports:
+    #   - "7474:7474"
+    #   - "7687:7687"
     healthcheck:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
 
@@ -26,6 +29,9 @@ services:
       - spring.neo4j.authentication.username=neo4j
       - spring.neo4j.authentication.password=${NEO4J_PASSWORD}
       - spring.neo4j.uri=bolt://db:7687
+      - management.health.mail.enabled=false
+    ports:
+      - "8080:8080"
     depends_on:
       - db
     command: [
@@ -50,15 +56,17 @@ services:
     depends_on:
       - api
     ports:
-      - "3001:3001"
+      - ${DATACAT_REST_API_PORT:-3001}:3001
     environment:
-      # - SERVER_URL=http://api:8080 # for local development
-      - SERVER_URL=${DATACAT_EDITOR_URL}
-      - BASE_PATH=/graphql
-      - USERNAME=admin
-      - PASSWORD=${DATACAT_ADMIN_PASSWORD}
+      # - custom.server-url=http://api:8080 # for local development
+      - custom.server-url=${DATACAT_EDITOR_URL}
+      - custom.username=admin
+      - custom.password=${DATACAT_ADMIN_PASSWORD}
+      - springdoc.swagger-ui.path=/swagger-ui.html
+      - server.forward-headers-strategy=framework
+      - server.servlet.context-path=/api/e1
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/swagger-ui/index.html"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:${DATACAT_REST_API_PORT:-3001}/swagger-ui/index.html"]
       interval: 30s
       timeout: 10s
       retries: 3

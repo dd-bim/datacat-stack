@@ -9,9 +9,6 @@ services:
     volumes:
       - "dbdata:/data"
       - "dblogs:/logs"
-    # ports:
-    #   - "7474:7474"
-    #   - "7687:7687"
     healthcheck:
       test: perl -MIO::Socket::INET -e 'exit(! defined( IO::Socket::INET->new("localhost:7687")))'
 
@@ -30,8 +27,6 @@ services:
       - spring.neo4j.authentication.password=${NEO4J_PASSWORD}
       - spring.neo4j.uri=bolt://db:7687
       - management.health.mail.enabled=false
-    ports:
-      - "8080:8080"
     depends_on:
       - db
     command: [
@@ -40,10 +35,7 @@ services:
         "java", "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher" ]
 
   web:
-    build:
-      context: "./services/proxy/"
-      args:
-        VERSION: ${DATACAT_EDITOR_VERSION}
+    image: schi11er/datacat-editor:${DATACAT_EDITOR_VERSION}
     restart: unless-stopped
     depends_on:
       - api

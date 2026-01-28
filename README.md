@@ -5,11 +5,11 @@ To make use of this project, Docker must be installed. Also, the `docker compose
 
 Docker install documentation: https://docs.docker.com/desktop/
 
-The datacat editor application is build as part of this configuration into a static nginx container that
-functions as the applications' frontend proxy as well. Check the build directory `./services` how this is handled.
-By default, the administration interface of the bundled Neo4j database is not exposed / proxied. 
-
-[More information about datacat](https://github.com/dd-bim/datacat/wiki)
+The stack contains of:
+- neo4j: the graph database
+- datacat api: the business logic with a GraphQL API
+- datacat editor: the web frontend to view and edit concepts in dictionaries, import or export concepts or create ids files
+- datacat restapi: this rest api has the same endpoints like the bSDD API (only endpoints needed for classification)
 
 ## Installation
 
@@ -41,25 +41,9 @@ you must define a relaying SMTP server, as the users will need to verify their e
 **Ideally, `docker-compose.yml` should stay untouched to track upstream development. All environmental settings
 should be overriden by editing `docker-compose.override.yml`.**
 
-### Pull current images
-
-To pull the current container images according to your configuration run:
-
-````bash
-$ docker compose pull
-````
-
-### Build client / proxy container
-
-To build the client / proxy image of the application stack run:
-
-````
-$ docker compose build
-````
-
 ### Run stack
 
-To start the application stack run in the project directory:
+To pull the images and start the application stack run in the project directory:
 
 ````
 $ docker compose up -d
@@ -81,17 +65,14 @@ on how to back up and restore the database.
 ### Update
 
 ````bash
-# Pull updates of the datacat-stack project
-$ git pull origin master
-
-# Update to the datacat / editor image version you'd like to use
+# Update to the image version you'd like to use
 $ nano .env
 
-# Pull new versions of the container images
-$ docker compose pull
+# Stopp the running containers
+$ docker compose down
 
-# Build and (re-)start the application stack 
-$ docker compose up --build -d
+# Pull and start the new application stack
+$ docker compose up -d
 ````
 
 # Debugging

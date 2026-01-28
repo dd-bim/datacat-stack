@@ -2,5 +2,8 @@
 *.iml
 .env
 docker-compose.override.yml
+docker-compose.dev.yml
 *.zip
-volumes/
+*.tar
+volumes*/
+data/

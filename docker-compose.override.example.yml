@@ -18,6 +18,11 @@
 #      - spring.mail.properties.mail.smtp.timeout=5000
 #      - spring.mail.properties.mail.smtp.writetimeout=5000
 #      - spring.mail.properties.mail.smtp.starttls.enable=true
+#    logging:
+#      driver: loki
+#      options:
+#        loki-url: "http://localhost:3100/loki/api/v1/push"
+#        loki-external-labels: "service=api"
 
 # Should only be used for development and testing
   # mail:
@@ -30,6 +35,35 @@
   #     - "./mailslurper-config.json:/config.json:ro"
   #     - "mail:/data"
 
+# Uncomment the following lines to use Grafana and Loki for log aggregation and visualization. Grafana will be available at http://localhost:3001 (or change the port as needed). Loki will be available at http://localhost:3100.
+# You need to install the Loki Docker Driver: docker plugin install grafana/loki-docker-driver:3.0.0 --alias loki --grant-all-permissions
+# In Grafana, go to "Connections" -> "Data Sources" -> "Add" -> "Loki" and set the URL to http://loki:3100. 
+# On Explore, choose Loki as the data source and use the query {service="api"} to see the logs from the API service.
+  # loki:
+  #   container_name: "loki"
+  #   image: grafana/loki:3.0.0
+  #   ports:
+  #     - "3100:3100"
+  #   restart: unless-stopped
+  #   volumes:
+  #     - loki-data:/loki
+
+  # grafana:
+  #   container_name: "grafana"
+  #   image: grafana/grafana:11.0.0
+  #   ports:
+  #     - "3001:3000"  
+  #   restart: unless-stopped
+  #   environment:
+  #     - GF_AUTH_ANONYMOUS_ENABLED=true
+  #     - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #   depends_on:
+  #     - loki
+
 # Must be uncommented to use the given mail container
 # volumes:
 #   mail:
+#  loki-data:
+#  grafana-data:

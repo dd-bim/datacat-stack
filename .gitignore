@@ -7,3 +7,4 @@ docker-compose.dev.yml
 *.tar
 volumes*/
 data/
+logs/

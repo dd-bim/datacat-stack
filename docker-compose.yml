@@ -33,6 +33,8 @@ services:
         "wait-for-it", "db:7687", "--timeout=300", "--",
         "wait-for-it", "${MAIL_HOST}:${MAIL_PORT}", "--timeout=30", "--",
         "java", "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher" ]
+    volumes:
+      - ./logs:/var/log/app
 
   web:
     image: schi11er/datacat-editor:${DATACAT_EDITOR_VERSION}
